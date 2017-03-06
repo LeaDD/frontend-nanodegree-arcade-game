@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function(x,y) {
+var Enemy = function(x,y, spd) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -8,6 +8,7 @@ var Enemy = function(x,y) {
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
+    this.spd = spd;
 };
 
 // Update the enemy's position, required method for game
@@ -16,7 +17,12 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x = this.x+1;
+    var speed = this.spd;
+    if(this.x < 500) {this.x = this.x + speed;
+    } else {
+        this.x = 0;
+    }
+
 };
 
 // Draw the enemy on the screen, required method for game
@@ -40,18 +46,32 @@ Player.prototype.update = function() {
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-//Player.prototype = Enemy.prototype;
-//Player.prototype.constructor = Player.prototype;
+
+Player.prototype.handleInput = function(dir) {
+    if (dir === 'left' && this.x > 0) {this.x = this.x - 100};
+    if (dir === 'right' && this.x < 400) {this.x = this.x + 100};
+    if (dir === 'down' && this.y < 375) {this.y = this.y + 80};
+    if (dir === 'up' && this.y > 75) {this.y = this.y - 80;
+    } else if (dir === 'up' && this.y < 75) {
+        this.x = 200, this.y = 375;
+    }
+};
 
 // Now instantiate your objects.
+var beetle1 = new Enemy(1,145,4);
+var beetle2 = new Enemy(1,225,6);
+var beetle3 = new Enemy(1,65,10);
+var beetle4 = new Enemy(1,65,2);
+
 // Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-var beetle1 = new Enemy(1,145);
 var allEnemies = [];
 allEnemies.push(beetle1);
+allEnemies.push(beetle2);
+allEnemies.push(beetle3);
+allEnemies.push(beetle4);
 
-
-var player = new Player(200,400);
+// Place the player object in a variable called player
+var player = new Player(200,375);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
