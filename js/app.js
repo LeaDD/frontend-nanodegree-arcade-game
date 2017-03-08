@@ -1,3 +1,8 @@
+/*
+    Author: David Deal
+
+*/
+
 // Enemies our player must avoid
 var Enemy = function(x,y, spd) {
     // Variables applied to each of our instances go here,
@@ -22,12 +27,27 @@ Enemy.prototype.update = function(dt) {
     } else {
         this.x = 0;
     }
-
+    //Check to see if bug has collided with player.
+    this.checkCollision();
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+//Check for collisions
+//https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+Enemy.prototype.checkCollision = function() {
+    var playerSpace = {x:player.x, y:player.y, width:50, height:30};
+    var bugSpace = {x:this.x, y:this.y, width:50, height:50};
+
+    if (playerSpace.x < bugSpace.x + bugSpace.width &&
+        playerSpace.x + playerSpace.width > bugSpace.x &&
+        playerSpace.y < bugSpace.y + bugSpace.height &&
+        playerSpace.height + playerSpace.y > bugSpace.y) {
+            player.reset();
+        }
 };
 
 // Now write your own player class
@@ -40,20 +60,28 @@ var Player = function(x,y) {
 };
 
 Player.prototype.update = function() {
-    console.log("Hi, I'm a function!");
+
 };
 
+//Set the player sprite back to the start position.
+Player.prototype.reset = function() {
+    this.x = 200;
+    this.y = 375;
+};
+
+//Draw the player sprite on the screen.
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//Use player input to move the player sprite on the screen.
 Player.prototype.handleInput = function(dir) {
-    if (dir === 'left' && this.x > 0) {this.x = this.x - 100};
-    if (dir === 'right' && this.x < 400) {this.x = this.x + 100};
-    if (dir === 'down' && this.y < 375) {this.y = this.y + 80};
-    if (dir === 'up' && this.y > 75) {this.y = this.y - 80;
+    if (dir === 'left' && this.x > 0) {this.x = this.x - 101;}
+    if (dir === 'right' && this.x < 400) {this.x = this.x + 101;}
+    if (dir === 'down' && this.y < 375) {this.y = this.y + 83;}
+    if (dir === 'up' && this.y > 75) {this.y = this.y - 83;
     } else if (dir === 'up' && this.y < 75) {
-        this.x = 200, this.y = 375;
+        this.reset();
     }
 };
 
@@ -85,3 +113,10 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+/*MAYBES:
+    SCOREBOARD
+    FIND A WAY TO RANDOMIZE BUG SPEED
+    FIND A WAY TO ADD ENEMIES AS TIME GOES ON
+    GEMS?
+*/
