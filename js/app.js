@@ -1,10 +1,9 @@
 /*
     Author: David Deal
-
 */
 
 // Enemies our player must avoid
-var Enemy = function(x,y, spd) {
+var Enemy = function(x,y,spd) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -39,13 +38,16 @@ Enemy.prototype.render = function() {
 //Check for collisions
 //https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
 Enemy.prototype.checkCollision = function() {
+    //Define approximate space occupied by player and bugs.
     var playerSpace = {x:player.x, y:player.y, width:50, height:30};
     var bugSpace = {x:this.x, y:this.y, width:50, height:50};
 
+    //Determine if player and bugs rectangles overlap.
     if (playerSpace.x < bugSpace.x + bugSpace.width &&
         playerSpace.x + playerSpace.width > bugSpace.x &&
         playerSpace.y < bugSpace.y + bugSpace.height &&
         playerSpace.height + playerSpace.y > bugSpace.y) {
+            //if they do then send the player back to start position.
             player.reset();
         }
 };
@@ -85,18 +87,30 @@ Player.prototype.handleInput = function(dir) {
     }
 };
 
-// Now instantiate your objects.
-var beetle1 = new Enemy(1,145,4);
-var beetle2 = new Enemy(1,225,6);
-var beetle3 = new Enemy(1,65,10);
-var beetle4 = new Enemy(1,65,2);
+//Generate a random speed for bugs.
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+function getSpeed() {
+    min = Math.ceil(1);
+    max = Math.floor(8);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+//Generate a random row in which each bug will appear.
+function getRow() {
+    min = Math.ceil(0);
+    max = Math.floor(3);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
 
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [];
-allEnemies.push(beetle1);
-allEnemies.push(beetle2);
-allEnemies.push(beetle3);
-allEnemies.push(beetle4);
+
+// Now instantiate your objects.
+for (var i = 0;i < 5; i++) {
+    var bugSpd = getSpeed();
+    var bugRow = 65 + (getRow() * 83);
+    allEnemies.push(new Enemy(-101,bugRow,bugSpd));
+};
 
 // Place the player object in a variable called player
 var player = new Player(200,375);
@@ -116,7 +130,5 @@ document.addEventListener('keyup', function(e) {
 
 /*MAYBES:
     SCOREBOARD
-    FIND A WAY TO RANDOMIZE BUG SPEED
-    FIND A WAY TO ADD ENEMIES AS TIME GOES ON
     GEMS?
 */
