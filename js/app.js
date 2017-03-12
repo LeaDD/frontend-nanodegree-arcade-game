@@ -2,6 +2,10 @@
     Author: David Deal
 */
 
+/*
+    Implement Enemies
+*/
+
 // Enemies our player must avoid
 var Enemy = function(x,y,spd,img) {
     // Variables applied to each of our instances go here,
@@ -24,7 +28,7 @@ Enemy.prototype.update = function(dt) {
     var speed = this.spd;
     if(this.x < 500) {this.x = this.x + speed;
     } else {
-        this.x = 0;
+        this.x = -101;
     }
     //Check to see if bug has collided with player.
     this.checkCollision();
@@ -47,7 +51,7 @@ Enemy.prototype.checkCollision = function() {
         playerSpace.x + playerSpace.width > bugSpace.x &&
         playerSpace.y < bugSpace.y + bugSpace.height &&
         playerSpace.height + playerSpace.y > bugSpace.y) {
-            //if they do then send the player back to start position.
+            //if they do then call function to resolve the collision.
             this.resolveCollision();
         }
 };
@@ -56,6 +60,10 @@ Enemy.prototype.resolveCollision = function() {
     player.score -= 10;
     player.reset();
 };
+
+/*
+    Implement Gems
+*/
 
 //Gems which the player can collect to increase their score.
 //Because of the similarities in functionality Gem will be
@@ -67,12 +75,16 @@ var Gem = function(x,y,spd,img) {
 Gem.prototype = Object.create(Enemy.prototype);
 Gem.prototype.constructor = Gem;
 
-
+//Collision for Gem will resolve differently from Enemy so over-
+//write this method on the Gem prototype.
 Gem.prototype.resolveCollision = function() {
     player.score += 100;
     this.y += 500;
 };
 
+/*
+    Implement the Player
+*/
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -111,6 +123,10 @@ Player.prototype.handleInput = function(dir) {
     }
 };
 
+/*
+    Implement the Scoreboard
+*/
+
 //Place a scoreboard and link to player's score property.
 var scoreBoard = function() {
     ctx.stroke();
@@ -119,6 +135,9 @@ var scoreBoard = function() {
     ctx.fillText("Score: " + player.score,40,70);
 };
 
+/*
+    Initial Setup of Game Assets
+*/
 
 //Generate a random values for various properties.
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -147,9 +166,12 @@ for (var i = 0;i < 3; i++) {
     allGems.push(new Gem(gemX,gemY,0,'images/Gem Blue.png'));
 }
 
-
 // Place the player object in a variable called player
 var player = new Player(200,375);
+
+/*
+    Listen for Player Input
+*/
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
