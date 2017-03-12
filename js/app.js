@@ -3,13 +3,13 @@
 */
 
 // Enemies our player must avoid
-var Enemy = function(x,y,spd) {
+var Enemy = function(x,y,spd,img) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+    this.sprite = img;
     this.x = x;
     this.y = y;
     this.spd = spd;
@@ -48,9 +48,31 @@ Enemy.prototype.checkCollision = function() {
         playerSpace.y < bugSpace.y + bugSpace.height &&
         playerSpace.height + playerSpace.y > bugSpace.y) {
             //if they do then send the player back to start position.
-            player.reset();
+            this.resolveCollision();
         }
 };
+
+Enemy.prototype.resolveCollision = function() {
+    player.score -= 10;
+    player.reset();
+};
+
+//Gems which the player can collect to increase their score.
+//Because of the similarities in functionality Gem will be
+//a subclass of Enemy
+var Gem = function(x,y,spd,img) {
+    Enemy.call(this,x,y,spd,img);
+};
+
+Gem.prototype = Object.create(Enemy.prototype);
+Gem.prototype.constructor = Gem;
+
+
+Gem.prototype.resolveCollision = function() {
+    player.score += 100;
+    this.y += 500;
+};
+
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -59,6 +81,7 @@ var Player = function(x,y) {
     this.sprite = 'images/char-boy.png';
     this.x = x;
     this.y = y;
+    this.score = 0;
 };
 
 Player.prototype.update = function() {
@@ -83,34 +106,47 @@ Player.prototype.handleInput = function(dir) {
     if (dir === 'down' && this.y < 375) {this.y = this.y + 83;}
     if (dir === 'up' && this.y > 75) {this.y = this.y - 83;
     } else if (dir === 'up' && this.y < 75) {
+        player.score = player.score + 50;
         this.reset();
     }
 };
 
-//Generate a random speed for bugs.
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-function getSpeed() {
-    min = Math.ceil(1);
-    max = Math.floor(8);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
+//Place a scoreboard and link to player's score property.
+var scoreBoard = function() {
+    ctx.stroke();
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText("Score: " + player.score,40,70);
+};
 
-//Generate a random row in which each bug will appear.
-function getRow() {
-    min = Math.ceil(0);
-    max = Math.floor(3);
+
+//Generate a random values for various properties.
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+function getRnd(min,max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [];
+var allGems = [];
 
 // Now instantiate your objects.
+//BUGS
 for (var i = 0;i < 5; i++) {
-    var bugSpd = getSpeed();
-    var bugRow = 65 + (getRow() * 83);
-    allEnemies.push(new Enemy(-101,bugRow,bugSpd));
-};
+    var bugSpd = getRnd(1,8);
+    var bugRow = 65 + (getRnd(0,3) * 83);
+    allEnemies.push(new Enemy(-101,bugRow,bugSpd,'images/enemy-bug.png'));
+}
+
+//GEMS
+for (var i = 0;i < 3; i++) {
+    var gemX = getRnd(50,400);
+    var gemY = getRnd(50,400);
+    allGems.push(new Gem(gemX,gemY,0,'images/Gem Blue.png'));
+}
+
 
 // Place the player object in a variable called player
 var player = new Player(200,375);
@@ -127,8 +163,3 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-/*MAYBES:
-    SCOREBOARD
-    GEMS?
-*/
