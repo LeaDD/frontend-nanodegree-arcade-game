@@ -1,7 +1,7 @@
-frontend-nanodegree-arcade-game
-===============================
+BUG SPEEDWAY
+------------
 
-The object of the game is to maneuver your avatar across the brick path to the water with colliding with the bugs. Successfully reaching the water will result in the player being awarded 50 points. Each collision with a bug will result in a penalty of 10 points.
+The object of the game is to maneuver your avatar across the brick path to the water whole avoiding collisions with the bugs ![alt text](https://github.com/LeaDD/frontend-nanodegree-arcade-game/tree/master/images "Enemy Bug"). Successfully reaching the water will result in the player being awarded 50 points. Each collision with a bug will result in a penalty of 10 points.
 
 In addition there will be gems placed at random on the game board. Maneuver the avator over each of these gems to receive a 100 point bonus.
 
