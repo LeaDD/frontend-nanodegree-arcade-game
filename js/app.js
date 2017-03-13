@@ -6,8 +6,10 @@
     Implement Enemies
 */
 
+
 // Enemies our player must avoid
 var Enemy = function(x,y,spd,img) {
+    "use strict";
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -22,6 +24,7 @@ var Enemy = function(x,y,spd,img) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
+    "use strict";
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -36,12 +39,14 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
+    "use strict";
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 //Check for collisions
 //https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
 Enemy.prototype.checkCollision = function() {
+    "use strict";
     //Define approximate space occupied by player and bugs.
     var playerSpace = {x:player.x, y:player.y, width:50, height:30};
     var bugSpace = {x:this.x, y:this.y, width:50, height:50};
@@ -57,6 +62,7 @@ Enemy.prototype.checkCollision = function() {
 };
 
 Enemy.prototype.resolveCollision = function() {
+    "use strict";
     player.score -= 10;
     player.reset();
 };
@@ -69,6 +75,7 @@ Enemy.prototype.resolveCollision = function() {
 //Because of the similarities in functionality Gem will be
 //a subclass of Enemy
 var Gem = function(x,y,spd,img) {
+    "use strict";
     Enemy.call(this,x,y,spd,img);
 };
 
@@ -78,6 +85,7 @@ Gem.prototype.constructor = Gem;
 //Collision for Gem will resolve differently from Enemy so over-
 //write this method on the Gem prototype.
 Gem.prototype.resolveCollision = function() {
+    "use strict";
     player.score += 100;
     this.y += 500;
 };
@@ -90,6 +98,7 @@ Gem.prototype.resolveCollision = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(x,y) {
+    "use strict";
     this.sprite = 'images/char-boy.png';
     this.x = x;
     this.y = y;
@@ -102,17 +111,20 @@ Player.prototype.update = function() {
 
 //Set the player sprite back to the start position.
 Player.prototype.reset = function() {
+    "use strict";
     this.x = 200;
     this.y = 375;
 };
 
 //Draw the player sprite on the screen.
 Player.prototype.render = function() {
+    "use strict";
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 //Use player input to move the player sprite on the screen.
 Player.prototype.handleInput = function(dir) {
+    "use strict";
     if (dir === 'left' && this.x > 0) {this.x = this.x - 101;}
     if (dir === 'right' && this.x < 400) {this.x = this.x + 101;}
     if (dir === 'down' && this.y < 375) {this.y = this.y + 83;}
@@ -129,6 +141,7 @@ Player.prototype.handleInput = function(dir) {
 
 //Place a scoreboard and link to player's score property.
 var scoreBoard = function() {
+    "use strict";
     ctx.stroke();
     ctx.fillStyle = "white";
     ctx.font = "20px Arial";
@@ -142,6 +155,7 @@ var scoreBoard = function() {
 //Generate a random values for various properties.
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 function getRnd(min,max) {
+    "use strict";
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
@@ -160,7 +174,7 @@ for (var i = 0;i < 5; i++) {
 }
 
 //GEMS
-for (var i = 0;i < 3; i++) {
+for (var j = 0;j < 3; j++) {
     var gemX = getRnd(50,400);
     var gemY = getRnd(50,400);
     allGems.push(new Gem(gemX,gemY,0,'images/Gem Blue.png'));
@@ -176,6 +190,7 @@ var player = new Player(200,375);
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
+    "use strict";
     var allowedKeys = {
         37: 'left',
         38: 'up',
